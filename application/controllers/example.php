@@ -388,18 +388,27 @@ class Admin extends CI_Controller {
         }
     }
 
-    public function deleteowner($ownerid) {
-        $this->load->library('doctrine');
-        $em = $this->doctrine->em;
-        $this->load->library('session');
-        if ($this->session->userdata('email')) {
-            $owner = $em->getRepository("Entity\Owner")->findOneBy(array('id' => $ownerid));
-            $em->remove($owner);
-            $em->flush();
-            redirect('admin/owners');
-        } else {
-            redirect('/login');
-        }
+      public function sendmail() {
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $this->load->library('email');
+        $this->email->from('praveen.technodrive@gmail.com', '');
+        $this->email->to('praveenkmr841@gmail.com');
+        $this->email->subject('My Allergy Alert Email Verification code');
+        $message = '<html><body>';
+        $message .= 'Hi <b></b>,Please verify your email address so we know that its really you!.';
+        $message .= ' <br>Enter this Verification code to Login into My Allergy Alert App.<br> ';
+        $message .= '<h1></h1>';
+        $message .= '</body></html>';
+        $this->email->message($message);
+       if ($this->email->send()){
+           
+           echo 'sucess';
+       }else{
+          
+ echo $this->email->print_debugger();
+       }
     }
 
 }
